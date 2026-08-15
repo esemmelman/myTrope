@@ -1,7 +1,20 @@
 const lines = [
-  ["מֵרְכָא", "טִפְּחָא", "מֵרְכָא", "סוֹף־פָּסוּק"],
-  [null, "טִפְּחָא", "מֵרְכָא", "סוֹף־פָּסוּק"],
-  ["מֵרְכָא", "טִפְּחָא", null, "סוֹף־פָּסוּק"]
+  [
+    { name: "מֵרְכָא", symbol: "֥" },
+    { name: "טִפְּחָא", symbol: "֖" },
+    { name: "מֵרְכָא", symbol: "֥" },
+    { name: "סוֹף־פָּסוּק", symbol: "ֽ" }
+  ],
+  [
+    { name: "טִפְּחָא", symbol: "֖" },
+    { name: "מֵרְכָא", symbol: "֥" },
+    { name: "סוֹף־פָּסוּק", symbol: "ֽ" }
+  ],
+  [
+    { name: "מֵרְכָא", symbol: "֥" },
+    { name: "טִפְּחָא", symbol: "֖" },
+    { name: "סוֹף־פָּסוּק", symbol: "ֽ" }
+  ]
 ];
 
 const DB_NAME = "my-trope-recordings";
@@ -121,13 +134,19 @@ lines.forEach((words, index) => {
   card.querySelector(".line-number").textContent = index + 1;
   const hebrewLine = card.querySelector(".hebrew-line");
   words.forEach(word => {
-    const element = document.createElement("span");
-    element.className = word ? "hebrew-word" : "hebrew-gap";
-    if (word) element.textContent = word;
-    else element.setAttribute("aria-label", "blank");
-    hebrewLine.append(element);
+    const trope = document.createElement("span");
+    trope.className = "trope-word";
+    const name = document.createElement("span");
+    name.className = "hebrew-word";
+    name.textContent = word.name;
+    const symbol = document.createElement("span");
+    symbol.className = "trope-symbol";
+    symbol.textContent = word.symbol;
+    symbol.setAttribute("aria-hidden", "true");
+    trope.append(name, symbol);
+    hebrewLine.append(trope);
   });
-  card.setAttribute("aria-label", `Line ${index + 1}: ${words.filter(Boolean).join(" ")}`);
+  card.setAttribute("aria-label", `Line ${index + 1}: ${words.map(word => word.name).join(" ")}`);
   card.addEventListener("click", () => setSelected(card));
   card.addEventListener("keydown", event => {
     if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelected(card); }
