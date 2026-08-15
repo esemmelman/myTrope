@@ -124,7 +124,7 @@ h2 { font: 600 1.55rem/1.2 "Frank Ruhl Libre", serif; }
   gap: .3em;
   min-height: 58px;
   margin-bottom: 13px;
-  font: 600 clamp(1.55rem, 5vw, 2.15rem)/1.35 "Frank Ruhl Libre", serif;
+  font: 600 clamp(1.9rem, 6vw, 2.65rem)/1.35 "Frank Ruhl Libre", serif;
 }
 
 .hebrew-word { white-space: nowrap; }
