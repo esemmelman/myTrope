@@ -368,6 +368,7 @@ lines.forEach((words, index) => {
     if (word.note === "֙" || word.note === "֨") note.classList.add("pashta-note");
     if (word.note === "֧" || word.note === "֛" || word.note === "֞" || word.note === "֜" || word.note === "֘" || word.note === "֠" || word.note === "֩" || word.note === "֡" || word.note === "֓" || word.note === "֪" || word.note === "֟") note.classList.add("stroke-note");
     if (word.note === "֦" || word.note === "֟") note.classList.add("wide-note");
+    if (word.note === "֪") note.classList.add("vertical-flip-note");
     note.setAttribute("aria-hidden", "true");
     const noteSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     noteSvg.setAttribute("viewBox", "-190 40 380 420");

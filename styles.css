@@ -167,6 +167,18 @@ h2 { font: 600 1.55rem/1.2 "Frank Ruhl Libre", serif; }
   white-space: pre;
   transform: translateX(-50%);
 }
+.font-match-note::after {
+  position: absolute;
+  z-index: 1;
+  top: .38em;
+  left: 50%;
+  width: .68em;
+  height: .7em;
+  background: var(--paper);
+  content: "";
+  transform: translateX(-50%);
+}
+.vertical-flip-note svg { transform: scaleY(-1); }
 
 .recording-status {
   margin: 0 0 14px;
