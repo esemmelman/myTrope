@@ -61,7 +61,7 @@ const tropePaths = {
   "֣": "M-160-332H80V-52H160V-412H-160Z",
   "֑": "M-34-52H34V-248L154-380L88-441L0-342L-88-441L-154-380L-34-248Z",
   "֤": "M156-68L-30-246L156-424L92-448L-158-246L92-44Z",
-  "֙": "M-142-352Q-40-352 28-294Q100-233 100-132Q100-81 96-62H166Q170-87 170-105Q170-442-142-442Z",
+  "֙": "M-170-341Q-69-341-2-283Q70-222 70-121Q70-70 66-52H166Q170-76 170-92Q170-441-170-441Z",
   "֔": "M-58-52H58V-168H-58ZM-58-286H58V-402H-58Z"
 };
 
@@ -219,7 +219,7 @@ lines.forEach((words, index) => {
     noteSvg.setAttribute("focusable", "false");
     const notePath = document.createElementNS("http://www.w3.org/2000/svg", "path");
     notePath.setAttribute("d", tropePaths[word.note]);
-    notePath.setAttribute("transform", "scale(1 -1)");
+    notePath.setAttribute("transform", word.note === "֤" ? "scale(-1 -1)" : "scale(1 -1)");
     noteSvg.append(notePath);
     note.append(noteSvg);
     anchor.append(note);
