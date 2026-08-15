@@ -18,9 +18,9 @@ const lines = [
 ];
 
 const tropePaths = {
-  "֥": "M5 3.5c0 7.2 4.2 11.5 13.5 11.5",
-  "֖": "M19 3.5c0 7.2-4.2 11.5-13.5 11.5",
-  "ֽ": "M12 3v13"
+  "֥": "M-170-341Q-69-341-2-283Q70-222 70-121Q70-70 66-52H166Q170-76 170-92Q170-441-170-441Z",
+  "֖": "M170-441Q-170-441-170-92Q-170-76-166-52H-66Q-70-70-70-121Q-70-222 2-283Q69-341 170-341Z",
+  "ֽ": "M-50-52H50V-441H-50Z"
 };
 
 const DB_NAME = "my-trope-recordings";
@@ -173,10 +173,11 @@ lines.forEach((words, index) => {
     note.className = "trope-note";
     note.setAttribute("aria-hidden", "true");
     const noteSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    noteSvg.setAttribute("viewBox", "0 0 24 20");
+    noteSvg.setAttribute("viewBox", "-190 40 380 420");
     noteSvg.setAttribute("focusable", "false");
     const notePath = document.createElementNS("http://www.w3.org/2000/svg", "path");
     notePath.setAttribute("d", tropePaths[word.note]);
+    notePath.setAttribute("transform", "scale(1 -1)");
     noteSvg.append(notePath);
     note.append(noteSvg);
     anchor.append(note);
