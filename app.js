@@ -192,8 +192,8 @@ const tropePaths = {
   "֘": "M-170-300C-110-420-32-420 18-314C68-208 120-208 170-326",
   "֒": "M-52-64A48 48 0 1 0 44-64A48 48 0 1 0-52-64ZM-142-304A48 48 0 1 0-46-304A48 48 0 1 0-142-304ZM46-304A48 48 0 1 0 142-304A48 48 0 1 0 46-304Z",
   "֦": "M-156-62C-156-234-104-356-28-392M18-62C18-234 74-356 154-392",
-  "֕": "M62-52H142V-430H62ZM-136-98A42 42 0 1 0-52-98A42 42 0 1 0-136-98ZM-136-310A42 42 0 1 0-52-310A42 42 0 1 0-136-310Z",
-  "֠": "M-128-312C-156-176-78-68 34-82C142-96 154-226 68-282C2-326-62-278-40-206C-18-142 72-148 150-62"
+  "֕": "M-142-52H-62V-430H-142ZM52-98A42 42 0 1 0 136-98A42 42 0 1 0 52-98ZM52-310A42 42 0 1 0 136-310A42 42 0 1 0 52-310Z",
+  "֠": "M-116-312C-150-210-84-130 6-150C86-168 90-270 20-306C-40-336-90-298-72-244C-56-198 12-200 64-236C112-204 140-138 142-66"
 };
 
 const DB_NAME = "my-trope-recordings";
@@ -346,16 +346,24 @@ lines.forEach((words, index) => {
     const note = document.createElement("span");
     note.className = "trope-note";
     if (word.note === "֙" || word.note === "֨") note.classList.add("pashta-note");
-    if (word.note === "֧" || word.note === "֛" || word.note === "֞" || word.note === "֜" || word.note === "֘" || word.note === "֦" || word.note === "֠") note.classList.add("stroke-note");
+    if (word.note === "֧" || word.note === "֛" || word.note === "֞" || word.note === "֜" || word.note === "֘" || word.note === "֠") note.classList.add("stroke-note");
     if (word.note === "֦") note.classList.add("wide-note");
     note.setAttribute("aria-hidden", "true");
     const noteSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     noteSvg.setAttribute("viewBox", "-190 40 380 420");
     noteSvg.setAttribute("focusable", "false");
     const notePath = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    notePath.setAttribute("d", tropePaths[word.note]);
-    notePath.setAttribute("transform", "scale(1 -1)");
-    noteSvg.append(notePath);
+    if (word.note === "֦") {
+      notePath.setAttribute("d", tropePaths["֥"]);
+      notePath.setAttribute("transform", "matrix(.52 0 0 -1 -85 0)");
+      const secondHook = notePath.cloneNode();
+      secondHook.setAttribute("transform", "matrix(.52 0 0 -1 85 0)");
+      noteSvg.append(notePath, secondHook);
+    } else {
+      notePath.setAttribute("d", tropePaths[word.note]);
+      notePath.setAttribute("transform", "scale(1 -1)");
+      noteSvg.append(notePath);
+    }
     if (word.note === "֛") {
       const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
       dot.setAttribute("class", "note-dot");
