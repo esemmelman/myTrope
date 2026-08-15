@@ -213,6 +213,7 @@ lines.forEach((words, index) => {
     anchor.textContent = `${word.letter}${word.note}`;
     const note = document.createElement("span");
     note.className = "trope-note";
+    if (word.note === "֙") note.classList.add("pashta-note");
     note.setAttribute("aria-hidden", "true");
     const noteSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     noteSvg.setAttribute("viewBox", "-190 40 380 420");
