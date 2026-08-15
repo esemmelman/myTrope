@@ -237,7 +237,7 @@ function preferredRecorderOptions() {
   const mimeType = mimeTypes.find(type => MediaRecorder.isTypeSupported(type));
   return {
     ...(mimeType ? { mimeType } : {}),
-    audioBitsPerSecond: 256000
+    audioBitsPerSecond: 320000
   };
 }
 
@@ -247,13 +247,14 @@ function lineLabel(index) {
 
 async function storeRecording(index, blob) {
   const extension = blob.type.includes("ogg") ? "ogg" : blob.type.includes("mp4") ? "m4a" : blob.type.includes("mpeg") ? "mp3" : "webm";
-  const objectPath = `line-${lineLabel(index)}.${extension}`;
+  const uniqueId = crypto.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  const objectPath = `line-${lineLabel(index)}/${uniqueId}.${extension}`;
   const { data: existing } = await cloud.from(RECORDINGS_TABLE)
     .select("object_path")
     .eq("line_index", index)
     .maybeSingle();
   const { error: uploadError } = await cloud.storage.from(RECORDINGS_BUCKET)
-    .upload(objectPath, blob, { contentType: blob.type, upsert: true, cacheControl: "0" });
+    .upload(objectPath, blob, { contentType: blob.type, upsert: false, cacheControl: "31536000" });
   if (uploadError) throw uploadError;
   const { error: rowError } = await cloud.from(RECORDINGS_TABLE).upsert({
     line_index: index,
@@ -263,20 +264,25 @@ async function storeRecording(index, blob) {
     byte_size: blob.size,
     updated_at: new Date().toISOString()
   });
-  if (rowError) throw rowError;
+  if (rowError) {
+    await cloud.storage.from(RECORDINGS_BUCKET).remove([objectPath]);
+    throw rowError;
+  }
   if (existing?.object_path && existing.object_path !== objectPath) {
-    await cloud.storage.from(RECORDINGS_BUCKET).remove([existing.object_path]);
+    const { error: cleanupError } = await cloud.storage.from(RECORDINGS_BUCKET).remove([existing.object_path]);
+    if (cleanupError) console.warn("Old recording cleanup failed", cleanupError);
   }
 }
 
-async function getRecording(index) {
-  const { data, error } = await cloud.from(RECORDINGS_TABLE)
-    .select("object_path")
-    .eq("line_index", index)
-    .maybeSingle();
+async function loadRecordings() {
+  const { data, error } = await cloud.from(RECORDINGS_TABLE).select("line_index, object_path");
   if (error) throw error;
-  if (!data) return null;
-  return cloud.storage.from(RECORDINGS_BUCKET).getPublicUrl(data.object_path).data.publicUrl;
+  data.forEach(recording => {
+    const card = list.querySelector(`[data-index="${recording.line_index}"]`);
+    if (!card) return;
+    const publicUrl = cloud.storage.from(RECORDINGS_BUCKET).getPublicUrl(recording.object_path).data.publicUrl;
+    attachAudio(card, publicUrl);
+  });
 }
 
 async function deleteRecording(index) {
@@ -356,7 +362,7 @@ async function startRecording(card, index) {
       activeRecording = null;
     };
 
-    recorder.start();
+    recorder.start(1000);
     button.classList.add("recording");
     label.textContent = "Stop";
       status.textContent = "Recording in high quality…";
@@ -492,7 +498,12 @@ lines.forEach((words, index) => {
     status.className = "recording-status";
   });
   list.append(card);
-  getRecording(index).then(source => { if (source) attachAudio(card, source); }).catch(error => console.error(error));
+});
+
+loadRecordings().catch(error => {
+  console.error(error);
+  supportMessage.hidden = false;
+  supportMessage.textContent = "Saved recordings could not be loaded. New recording is still available.";
 });
 
 if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
