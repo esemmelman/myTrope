@@ -1,5 +1,7 @@
 # My Trope
 
+Current version: **1.1.0**
+
 A small browser-based Hebrew trope practice app. Each of the three extracted patterns can be selected and recorded independently.
 
 Recordings stay private in the browser's IndexedDB storage and are not uploaded anywhere.
