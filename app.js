@@ -1,19 +1,19 @@
 const lines = [
   [
-    { name: "מֵרְכָא", symbol: "֥" },
-    { name: "טִפְּחָא", symbol: "֖" },
-    { name: "מֵרְכָא", symbol: "֥" },
-    { name: "סוֹף־פָּסוּק", symbol: "ֽ" }
+    { name: "מֵרְכָ֥א" },
+    { name: "טִפְּחָ֖א" },
+    { name: "מֵרְכָ֥א" },
+    { name: "סוֹף־פָּסֽוּק" }
   ],
   [
-    { name: "טִפְּחָא", symbol: "֖" },
-    { name: "מֵרְכָא", symbol: "֥" },
-    { name: "סוֹף־פָּסוּק", symbol: "ֽ" }
+    { name: "טִפְּחָ֖א" },
+    { name: "מֵרְכָ֥א" },
+    { name: "סוֹף־פָּסֽוּק" }
   ],
   [
-    { name: "מֵרְכָא", symbol: "֥" },
-    { name: "טִפְּחָא", symbol: "֖" },
-    { name: "סוֹף־פָּסוּק", symbol: "ֽ" }
+    { name: "מֵרְכָ֥א" },
+    { name: "טִפְּחָ֖א" },
+    { name: "סוֹף־פָּסֽוּק" }
   ]
 ];
 
@@ -134,17 +134,10 @@ lines.forEach((words, index) => {
   card.querySelector(".line-number").textContent = index + 1;
   const hebrewLine = card.querySelector(".hebrew-line");
   words.forEach(word => {
-    const trope = document.createElement("span");
-    trope.className = "trope-word";
     const name = document.createElement("span");
     name.className = "hebrew-word";
     name.textContent = word.name;
-    const symbol = document.createElement("span");
-    symbol.className = "trope-symbol";
-    symbol.textContent = word.symbol;
-    symbol.setAttribute("aria-hidden", "true");
-    trope.append(name, symbol);
-    hebrewLine.append(trope);
+    hebrewLine.append(name);
   });
   card.setAttribute("aria-label", `Line ${index + 1}: ${words.map(word => word.name).join(" ")}`);
   card.addEventListener("click", () => setSelected(card));
