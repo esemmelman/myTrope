@@ -193,7 +193,7 @@ const tropePaths = {
   "֒": "M-52-64A48 48 0 1 0 44-64A48 48 0 1 0-52-64ZM-142-304A48 48 0 1 0-46-304A48 48 0 1 0-142-304ZM46-304A48 48 0 1 0 142-304A48 48 0 1 0 46-304Z",
   "֦": "M-156-62C-156-234-104-356-28-392M18-62C18-234 74-356 154-392",
   "֕": "M-142-52H-62V-430H-142ZM52-98A42 42 0 1 0 136-98A42 42 0 1 0 52-98ZM52-310A42 42 0 1 0 136-310A42 42 0 1 0 52-310Z",
-  "֠": "M-132-410L50-172"
+  "֠": "M-76-354L40-184"
 };
 
 const DB_NAME = "my-trope-recordings";
@@ -377,7 +377,7 @@ lines.forEach((words, index) => {
       const ring = document.createElementNS("http://www.w3.org/2000/svg", "circle");
       ring.setAttribute("cx", "92");
       ring.setAttribute("cy", "-116");
-      ring.setAttribute("r", "52");
+      ring.setAttribute("r", "70");
       ring.setAttribute("transform", "scale(1 -1)");
       noteSvg.append(ring);
     }
