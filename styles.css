@@ -1,0 +1,186 @@
+:root {
+  color-scheme: light;
+  --ink: #20201d;
+  --muted: #716e66;
+  --paper: #fffdf8;
+  --canvas: #f5efe4;
+  --line: #ddd4c6;
+  --accent: #ad302a;
+  --accent-dark: #86231f;
+  --green: #3e6955;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 15% 0%, rgba(173, 48, 42, .08), transparent 30rem),
+    var(--canvas);
+}
+
+button { font: inherit; }
+
+.app-shell {
+  width: min(880px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 56px 0 72px;
+}
+
+.app-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.eyebrow, .step-label {
+  margin: 0 0 8px;
+  color: var(--accent);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+}
+
+h1, h2 { margin: 0; }
+h1 { font: 700 clamp(2.5rem, 8vw, 4.75rem)/.95 "Frank Ruhl Libre", serif; }
+h2 { font: 600 1.55rem/1.2 "Frank Ruhl Libre", serif; }
+
+.header-note {
+  max-width: 290px;
+  margin: 0 0 4px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.practice-panel {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper);
+  box-shadow: 0 18px 55px rgba(67, 53, 35, .09);
+}
+
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 28px;
+  border-bottom: 1px solid var(--line);
+}
+
+.line-count {
+  padding: 6px 10px;
+  border-radius: 999px;
+  color: var(--muted);
+  background: #eee7da;
+  font-size: .78rem;
+  font-weight: 600;
+}
+
+.line-card {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  gap: 18px;
+  padding: 28px;
+  border-bottom: 1px solid var(--line);
+  outline: none;
+  transition: background .18s ease;
+}
+
+.line-card:last-child { border-bottom: 0; }
+.line-card:hover, .line-card[aria-selected="true"] { background: #faf6ee; }
+.line-card:focus-visible { box-shadow: inset 0 0 0 3px rgba(173, 48, 42, .25); }
+
+.line-number {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--muted);
+  font-size: .82rem;
+  font-weight: 600;
+}
+
+.hebrew-line {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: clamp(12px, 3vw, 30px);
+  min-height: 58px;
+  margin-bottom: 13px;
+  font: 600 clamp(1.55rem, 5vw, 2.15rem)/1.35 "Frank Ruhl Libre", serif;
+}
+
+.hebrew-word { white-space: nowrap; }
+.hebrew-gap {
+  display: inline-block;
+  width: clamp(44px, 10vw, 82px);
+  height: 1.25em;
+  border-bottom: 2px dashed #c9bead;
+}
+
+.recording-status {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: .82rem;
+}
+
+.recording-status.saved { color: var(--green); }
+.recording-status.active { color: var(--accent); }
+
+.controls { display: flex; align-items: center; gap: 10px; }
+.controls button {
+  min-height: 39px;
+  border-radius: 9px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.record-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 15px;
+  border: 0;
+  color: white;
+  background: var(--accent);
+}
+.record-button:hover { background: var(--accent-dark); }
+.record-button.recording { animation: pulse 1.4s infinite; }
+.record-dot { width: 9px; height: 9px; border-radius: 50%; background: currentColor; }
+
+.secondary-button {
+  padding: 0 15px;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  background: white;
+}
+.text-button { padding: 0 8px; border: 0; color: var(--muted); background: transparent; }
+button:disabled { cursor: not-allowed; opacity: .4; }
+.timer { margin-left: auto; color: var(--muted); font-variant-numeric: tabular-nums; font-size: .82rem; }
+.audio-player { width: 100%; height: 42px; margin-top: 14px; }
+.support-message { padding: 14px; color: var(--accent); text-align: center; }
+
+@keyframes pulse { 50% { box-shadow: 0 0 0 6px rgba(173, 48, 42, .12); } }
+
+@media (max-width: 600px) {
+  .app-shell { width: min(100% - 20px, 880px); padding: 28px 0 42px; }
+  .app-header { display: block; }
+  .header-note { margin-top: 16px; }
+  .panel-heading, .line-card { padding: 20px; }
+  .line-card { grid-template-columns: 30px 1fr; gap: 10px; }
+  .line-number { width: 28px; height: 28px; }
+  .controls { flex-wrap: wrap; }
+  .timer { margin-left: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}

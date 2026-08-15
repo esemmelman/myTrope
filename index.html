@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5efe4">
+  <meta name="description" content="Practice and record three Hebrew trope patterns.">
+  <title>My Trope</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">CHANT PRACTICE</p>
+        <h1>My Trope</h1>
+      </div>
+      <p class="header-note">Select a line, then record yourself chanting it.</p>
+    </header>
+
+    <section class="practice-panel" aria-labelledby="patterns-heading">
+      <div class="panel-heading">
+        <div>
+          <p class="step-label">YOUR LINES</p>
+          <h2 id="patterns-heading">Trope patterns</h2>
+        </div>
+        <span class="line-count">3 lines</span>
+      </div>
+
+      <div id="line-list" class="line-list" role="listbox" aria-label="Hebrew trope lines"></div>
+    </section>
+
+    <p id="support-message" class="support-message" hidden></p>
+  </main>
+
+  <template id="line-template">
+    <article class="line-card" role="option" tabindex="0" aria-selected="false">
+      <div class="line-number" aria-hidden="true"></div>
+      <div class="line-content">
+        <div class="hebrew-line" dir="rtl" lang="he"></div>
+        <p class="recording-status" aria-live="polite">Ready to record</p>
+        <div class="controls">
+          <button class="record-button" type="button">
+            <span class="record-dot" aria-hidden="true"></span>
+            <span class="record-label">Record</span>
+          </button>
+          <button class="play-button secondary-button" type="button" disabled>Play</button>
+          <button class="delete-button text-button" type="button" disabled>Delete</button>
+          <span class="timer" aria-label="Recording duration">0:00</span>
+        </div>
+        <audio class="audio-player" controls preload="metadata" hidden></audio>
+      </div>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
