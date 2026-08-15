@@ -152,9 +152,9 @@ const tropePaths = {
   "֨": "M-170-341Q-69-341-2-283Q70-222 70-121Q70-70 66-52H166Q170-76 170-92Q170-441-170-441Z",
   "֧": "M120-58L-70-142L48-224L-118-312L42-428",
   "֛": "M108-64C108-238 34-352-118-352",
-  "֞": "M-150-58L-72-58L-28-254L-106-254ZM26-58H104L148-254H70Z",
+  "֞": "M-118-408C-118-282-80-166-28-62M24-408C24-282 64-166 116-62",
   "֗": "M0-48L154-246L0-444L-154-246Z",
-  "֜": "M-170-341Q-69-341-2-283Q70-222 70-121Q70-70 66-52H166Q170-76 170-92Q170-441-170-441Z"
+  "֜": "M-118-408C-118-248-42-102 112-62"
 };
 
 const DB_NAME = "my-trope-recordings";
@@ -306,7 +306,7 @@ lines.forEach((words, index) => {
     const note = document.createElement("span");
     note.className = "trope-note";
     if (word.note === "֙" || word.note === "֨") note.classList.add("pashta-note");
-    if (word.note === "֧" || word.note === "֛") note.classList.add("stroke-note");
+    if (word.note === "֧" || word.note === "֛" || word.note === "֞" || word.note === "֜") note.classList.add("stroke-note");
     note.setAttribute("aria-hidden", "true");
     const noteSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     noteSvg.setAttribute("viewBox", "-190 40 380 420");
