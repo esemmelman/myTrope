@@ -227,8 +227,26 @@ const template = document.querySelector("#line-template");
 const supportMessage = document.querySelector("#support-message");
 const recordingList = document.querySelector("#recording-list");
 const playbackStatus = document.querySelector("#playback-status");
+const lineSearchInput = document.querySelector("#line-search-input");
+const clearLineSearch = document.querySelector("#clear-line-search");
 let activeRecording = null;
 let activePlayback = null;
+
+const tropeSearchNames = {
+  "֥": ["Mercha", "merkha"], "֖": ["Tipcha", "tifcha"],
+  "ֽ": ["Sof Pasuk", "sof passuk sof pasuq"], "֣": ["Munach", "munah"],
+  "֑": ["Etnachta", "etnahta etnachta"], "֤": ["Mahapach", "mahapakh mehuppach"],
+  "֙": ["Pashta", "pashtah"], "֔": ["Zakef Katan", "zaqef qatan zakef katon"],
+  "֚": ["Yetiv", "yetib"], "֨": ["Kadma", "qadma"],
+  "֧": ["Darga", "dargah"], "֛": ["Tevir", "tvir"],
+  "֞": ["Gershayim", "gershaim"], "֗": ["Revia", "revii revia mugrash"],
+  "֘": ["Zarqa", "zarka tsinor"], "֒": ["Segol", "segolta"],
+  "֦": ["Mercha Kefula", "merkha kefulah double mercha"],
+  "֕": ["Zakef Gadol", "zaqef gadol"], "֠": ["Telisha Gedola", "telisha gedolah"],
+  "֩": ["Telisha Ketana", "telisha qetana ketanah"], "֡": ["Pazer", "pazer qatan"],
+  "֓": ["Shalshelet", "shalshalet"], "֪": ["Yerach Ben Yomo", "yerah ben yomo galgal"],
+  "֟": ["Karnei Farah", "qarney para karne parah pazer gadol"]
+};
 
 function preferredRecorderOptions() {
   const mimeTypes = [
@@ -314,6 +332,61 @@ function lineText(words) {
   return words.map(word => word.before + word.letter + word.after).join(" ");
 }
 
+function tropeName(word) {
+  if (word.note === "֜") return lineText([word]).includes("אַזְ") ? ["Azla", "azlah"] : ["Geresh", "geresh muqdam"];
+  return tropeSearchNames[word.note] || ["Trope", ""];
+}
+
+function englishLine(words) {
+  return words.map(word => tropeName(word)[0]).join(" · ");
+}
+
+function normalizeSearch(value) {
+  return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function editDistance(a, b) {
+  const row = Array.from({ length: b.length + 1 }, (_, index) => index);
+  for (let i = 1; i <= a.length; i += 1) {
+    let diagonal = row[0];
+    row[0] = i;
+    for (let j = 1; j <= b.length; j += 1) {
+      const above = row[j];
+      row[j] = Math.min(row[j] + 1, row[j - 1] + 1, diagonal + (a[i - 1] === b[j - 1] ? 0 : 1));
+      diagonal = above;
+    }
+  }
+  return row[b.length];
+}
+
+function matchScore(query, candidate) {
+  if (candidate.includes(query)) return candidate.indexOf(query) / 1000;
+  const candidateWords = candidate.split(" ");
+  return query.split(" ").reduce((total, queryWord) => {
+    const closest = Math.min(...candidateWords.map(word => editDistance(queryWord, word) / Math.max(queryWord.length, word.length)));
+    return total + closest;
+  }, 0) / query.split(" ").length;
+}
+
+function filterPlaybackList() {
+  const query = normalizeSearch(lineSearchInput.value);
+  clearLineSearch.hidden = !query;
+  const options = [...recordingList.querySelectorAll(".recording-option")];
+  if (!query) {
+    options.forEach((option, index) => { option.hidden = false; option.style.order = index; });
+    playbackStatus.textContent = "Select a recorded line to play it";
+    return;
+  }
+  const matches = options
+    .map(option => ({ option, score: matchScore(query, option.dataset.search) }))
+    .sort((a, b) => a.score - b.score || Number(a.option.dataset.lineIndex) - Number(b.option.dataset.lineIndex));
+  matches.forEach(({ option }, rank) => {
+    option.hidden = rank >= 10;
+    option.style.order = rank;
+  });
+  playbackStatus.textContent = `Closest matches for “${lineSearchInput.value.trim()}”`;
+}
+
 function setPlaybackAvailability(index, available) {
   const option = recordingList.querySelector(`[data-line-index="${index}"]`);
   if (!option) return;
@@ -371,9 +444,14 @@ function renderPlaybackList() {
     option.dataset.lineIndex = index;
     option.setAttribute("role", "option");
     option.setAttribute("aria-selected", "false");
+    const english = englishLine(words);
+    option.dataset.search = normalizeSearch(`${english} ${words.flatMap(word => tropeName(word)).join(" ")} line ${lineLabel(index)}`);
     option.innerHTML = `
       <span class="playback-number">${lineLabel(index)}</span>
-      <span class="playback-hebrew" dir="rtl" lang="he">${lineText(words)}</span>
+      <span class="playback-text">
+        <span class="playback-hebrew" dir="rtl" lang="he">${lineText(words)}</span>
+        <span class="playback-english">${english}</span>
+      </span>
       <span class="playback-state">Not recorded</span>`;
     option.addEventListener("click", () => playLineFromList(index));
     recordingList.append(option);
@@ -589,6 +667,22 @@ lines.forEach((words, index) => {
 });
 
 renderPlaybackList();
+lineSearchInput.addEventListener("input", filterPlaybackList);
+lineSearchInput.addEventListener("keydown", event => {
+  if (event.key === "Escape") {
+    lineSearchInput.value = "";
+    filterPlaybackList();
+  }
+  if (event.key === "Enter") {
+    const firstMatch = [...recordingList.querySelectorAll(".recording-option")].find(option => !option.hidden);
+    if (firstMatch) { event.preventDefault(); firstMatch.click(); }
+  }
+});
+clearLineSearch.addEventListener("click", () => {
+  lineSearchInput.value = "";
+  filterPlaybackList();
+  lineSearchInput.focus();
+});
 loadRecordings().catch(error => {
   console.error(error);
   supportMessage.hidden = false;
