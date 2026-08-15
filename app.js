@@ -268,6 +268,15 @@ lines.forEach((words, index) => {
     notePath.setAttribute("d", tropePaths[word.note]);
     notePath.setAttribute("transform", "scale(1 -1)");
     noteSvg.append(notePath);
+    if (word.note === "֛") {
+      const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      dot.setAttribute("class", "note-dot");
+      dot.setAttribute("cx", "-70");
+      dot.setAttribute("cy", "-76");
+      dot.setAttribute("r", "34");
+      dot.setAttribute("transform", "scale(1 -1)");
+      noteSvg.append(dot);
+    }
     note.append(noteSvg);
     anchor.append(note);
     name.append(anchor, document.createTextNode(word.after));
