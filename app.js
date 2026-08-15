@@ -170,6 +170,21 @@ const lines = [
   [
     { before: "מֻ", letter: "נַּ", after: "ח", note: "֣" },
     { before: "", letter: "תְּ", after: "לִישָׁא גְּדוֹלָה", note: "֠" }
+  ],
+  [
+    { before: "מֻ", letter: "נַּ", after: "ח", note: "֣" },
+    { before: "תְּלִישָׁא קְטַנָּ", letter: "ה", after: "", note: "֩" }
+  ],
+  [
+    { before: "מֻ", letter: "נַּ", after: "ח", note: "֣" },
+    { before: "פָּ", letter: "זֵ", after: "ר", note: "֡" }
+  ],
+  [
+    { before: "שַׁלְ", letter: "שֶׁ", after: "לֶת", note: "֓" }
+  ],
+  [
+    { before: "יֶרַח בֶּן־", letter: "י", after: "וֹמוֹ", note: "֪" },
+    { before: "קַרְ", letter: "נֵ", after: "י פָרָה", note: "֟" }
   ]
 ];
 
@@ -193,7 +208,12 @@ const tropePaths = {
   "֒": "M-52-64A48 48 0 1 0 44-64A48 48 0 1 0-52-64ZM-142-304A48 48 0 1 0-46-304A48 48 0 1 0-142-304ZM46-304A48 48 0 1 0 142-304A48 48 0 1 0 46-304Z",
   "֦": "M-156-62C-156-234-104-356-28-392M18-62C18-234 74-356 154-392",
   "֕": "M-142-52H-62V-430H-142ZM52-98A42 42 0 1 0 136-98A42 42 0 1 0 52-98ZM52-310A42 42 0 1 0 136-310A42 42 0 1 0 52-310Z",
-  "֠": "M-76-354L40-184"
+  "֠": "M-76-354L40-184",
+  "֩": "M76-354L-40-184",
+  "֡": "M-78-380C52-350-48-276 62-235C-42-194 58-118-48-72",
+  "֓": "M-62-404L66-344L-62-284L66-224L-62-164L62-92",
+  "֪": "M-106-246C-106-92 106-92 106-246",
+  "֟": "M-142-354L-54-184M142-354L54-184"
 };
 
 const DB_NAME = "my-trope-recordings";
@@ -346,8 +366,8 @@ lines.forEach((words, index) => {
     const note = document.createElement("span");
     note.className = "trope-note";
     if (word.note === "֙" || word.note === "֨") note.classList.add("pashta-note");
-    if (word.note === "֧" || word.note === "֛" || word.note === "֞" || word.note === "֜" || word.note === "֘" || word.note === "֠") note.classList.add("stroke-note");
-    if (word.note === "֦") note.classList.add("wide-note");
+    if (word.note === "֧" || word.note === "֛" || word.note === "֞" || word.note === "֜" || word.note === "֘" || word.note === "֠" || word.note === "֩" || word.note === "֡" || word.note === "֓" || word.note === "֪" || word.note === "֟") note.classList.add("stroke-note");
+    if (word.note === "֦" || word.note === "֟") note.classList.add("wide-note");
     note.setAttribute("aria-hidden", "true");
     const noteSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     noteSvg.setAttribute("viewBox", "-190 40 380 420");
@@ -380,6 +400,24 @@ lines.forEach((words, index) => {
       ring.setAttribute("r", "70");
       ring.setAttribute("transform", "scale(1 -1)");
       noteSvg.append(ring);
+    }
+    if (word.note === "֩") {
+      const ring = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      ring.setAttribute("cx", "-92");
+      ring.setAttribute("cy", "-116");
+      ring.setAttribute("r", "70");
+      ring.setAttribute("transform", "scale(1 -1)");
+      noteSvg.append(ring);
+    }
+    if (word.note === "֟") {
+      [[-102, -116], [102, -116]].forEach(([cx, cy]) => {
+        const ring = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        ring.setAttribute("cx", String(cx));
+        ring.setAttribute("cy", String(cy));
+        ring.setAttribute("r", "66");
+        ring.setAttribute("transform", "scale(1 -1)");
+        noteSvg.append(ring);
+      });
     }
     note.append(noteSvg);
     anchor.append(note);
