@@ -114,6 +114,28 @@ const lines = [
     { before: "מֻ", letter: "נַּ", after: "ח", note: "֣" },
     { before: "מֵרְ", letter: "כָ", after: "א", note: "֥" },
     { before: "תְּבִ", letter: "י", after: "ר", note: "֛" }
+  ],
+  [
+    { before: "תְּבִ", letter: "י", after: "ר", note: "֛" }
+  ],
+  [
+    { before: "גֵּרְ", letter: "שַׁ", after: "יִם", note: "֞" }
+  ],
+  [
+    { before: "מֻ", letter: "נַּ", after: "ח", note: "֣" },
+    { before: "מֻ", letter: "נַּ", after: "ח", note: "֣" },
+    { before: "רְ", letter: "בִ", after: "יעַ", note: "֗" }
+  ],
+  [
+    { before: "מֻ", letter: "נַּ", after: "ח", note: "֣" },
+    { before: "רְ", letter: "בִ", after: "יעַ", note: "֗" }
+  ],
+  [
+    { before: "רְ", letter: "בִ", after: "יעַ", note: "֗" }
+  ],
+  [
+    { before: "קַדְ", letter: "מָ", after: "א", note: "֨" },
+    { before: "וְאַזְ", letter: "לָ", after: "א", note: "֜" }
   ]
 ];
 
@@ -129,7 +151,10 @@ const tropePaths = {
   "֚": "M156-68L-30-246L156-424L92-448L-158-246L92-44Z",
   "֨": "M-170-341Q-69-341-2-283Q70-222 70-121Q70-70 66-52H166Q170-76 170-92Q170-441-170-441Z",
   "֧": "M120-58L-70-142L48-224L-118-312L42-428",
-  "֛": "M108-64C108-238 34-352-118-352"
+  "֛": "M108-64C108-238 34-352-118-352",
+  "֞": "M-150-58L-72-58L-28-254L-106-254ZM26-58H104L148-254H70Z",
+  "֗": "M0-48L154-246L0-444L-154-246Z",
+  "֜": "M-170-341Q-69-341-2-283Q70-222 70-121Q70-70 66-52H166Q170-76 170-92Q170-441-170-441Z"
 };
 
 const DB_NAME = "my-trope-recordings";
