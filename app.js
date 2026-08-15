@@ -219,7 +219,7 @@ lines.forEach((words, index) => {
     noteSvg.setAttribute("focusable", "false");
     const notePath = document.createElementNS("http://www.w3.org/2000/svg", "path");
     notePath.setAttribute("d", tropePaths[word.note]);
-    notePath.setAttribute("transform", word.note === "֤" ? "scale(-1 -1)" : "scale(1 -1)");
+    notePath.setAttribute("transform", "scale(1 -1)");
     noteSvg.append(notePath);
     note.append(noteSvg);
     anchor.append(note);
