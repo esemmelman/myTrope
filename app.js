@@ -225,7 +225,10 @@ const tropePaths = {
 const list = document.querySelector("#line-list");
 const template = document.querySelector("#line-template");
 const supportMessage = document.querySelector("#support-message");
+const recordingList = document.querySelector("#recording-list");
+const playbackStatus = document.querySelector("#playback-status");
 let activeRecording = null;
+let activePlayback = null;
 
 function preferredRecorderOptions() {
   const mimeTypes = [
@@ -307,6 +310,70 @@ function setSelected(card) {
   document.querySelectorAll(".line-card").forEach(item => item.setAttribute("aria-selected", String(item === card)));
 }
 
+function lineText(words) {
+  return words.map(word => word.before + word.letter + word.after).join(" ");
+}
+
+function setPlaybackAvailability(index, available) {
+  const option = recordingList.querySelector(`[data-line-index="${index}"]`);
+  if (!option) return;
+  option.classList.toggle("has-recording", available);
+  option.querySelector(".playback-state").textContent = available ? "Play" : "Not recorded";
+}
+
+function resetPlaybackSelection() {
+  recordingList.querySelectorAll(".recording-option").forEach(option => {
+    option.classList.remove("selected", "playing");
+    option.setAttribute("aria-selected", "false");
+    if (option.classList.contains("has-recording")) option.querySelector(".playback-state").textContent = "Play";
+  });
+}
+
+async function playLineFromList(index) {
+  const card = list.querySelector(`[data-index="${index}"]`);
+  const audio = card?.querySelector(".audio-player");
+  const option = recordingList.querySelector(`[data-line-index="${index}"]`);
+  resetPlaybackSelection();
+  option.classList.add("selected");
+  option.setAttribute("aria-selected", "true");
+  if (!audio?.src) {
+    playbackStatus.textContent = `Line ${lineLabel(index)} has not been recorded yet`;
+    return;
+  }
+  if (activePlayback && activePlayback !== audio) {
+    activePlayback.pause();
+    activePlayback.currentTime = 0;
+  }
+  activePlayback = audio;
+  audio.currentTime = 0;
+  try {
+    await audio.play();
+    option.classList.add("playing");
+    option.querySelector(".playback-state").textContent = "Playing";
+    playbackStatus.textContent = `Playing line ${lineLabel(index)}`;
+  } catch (error) {
+    console.error(error);
+    playbackStatus.textContent = `Line ${lineLabel(index)} could not be played`;
+  }
+}
+
+function renderPlaybackList() {
+  lines.forEach((words, index) => {
+    const option = document.createElement("button");
+    option.type = "button";
+    option.className = "recording-option";
+    option.dataset.lineIndex = index;
+    option.setAttribute("role", "option");
+    option.setAttribute("aria-selected", "false");
+    option.innerHTML = `
+      <span class="playback-number">${lineLabel(index)}</span>
+      <span class="playback-hebrew" dir="rtl" lang="he">${lineText(words)}</span>
+      <span class="playback-state">Not recorded</span>`;
+    option.addEventListener("click", () => playLineFromList(index));
+    recordingList.append(option);
+  });
+}
+
 function attachAudio(card, source) {
   const audio = card.querySelector(".audio-player");
   const oldUrl = audio.dataset.url;
@@ -320,6 +387,7 @@ function attachAudio(card, source) {
   const status = card.querySelector(".recording-status");
   status.textContent = "Recording saved online";
   status.className = "recording-status saved";
+  setPlaybackAvailability(Number(card.dataset.index), true);
 }
 
 async function startRecording(card, index) {
@@ -459,7 +527,7 @@ lines.forEach((words, index) => {
     name.append(anchor, document.createTextNode(word.after));
     hebrewLine.append(name);
   });
-  card.setAttribute("aria-label", `Line ${displayLineLabel}: ${words.map(word => word.before + word.letter + word.after).join(" ")}`);
+  card.setAttribute("aria-label", `Line ${displayLineLabel}: ${lineText(words)}`);
   card.addEventListener("click", () => setSelected(card));
   card.addEventListener("keydown", event => {
     if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelected(card); }
@@ -474,7 +542,14 @@ lines.forEach((words, index) => {
     if (audio.paused) { audio.play(); card.querySelector(".play-button").textContent = "Pause"; }
     else { audio.pause(); card.querySelector(".play-button").textContent = "Play"; }
   });
-  card.querySelector("audio").addEventListener("ended", () => card.querySelector(".play-button").textContent = "Play");
+  card.querySelector("audio").addEventListener("ended", () => {
+    card.querySelector(".play-button").textContent = "Play";
+    if (activePlayback === card.querySelector("audio")) {
+      activePlayback = null;
+      resetPlaybackSelection();
+      playbackStatus.textContent = "Select a recorded line to play it";
+    }
+  });
   card.querySelector(".delete-button").addEventListener("click", async () => {
     try {
       await deleteRecording(index);
@@ -486,6 +561,12 @@ lines.forEach((words, index) => {
       return;
     }
     const audio = card.querySelector("audio");
+    if (activePlayback === audio) {
+      audio.pause();
+      activePlayback = null;
+      resetPlaybackSelection();
+      playbackStatus.textContent = "Select a recorded line to play it";
+    }
     if (audio.dataset.url) URL.revokeObjectURL(audio.dataset.url);
     audio.removeAttribute("src");
     audio.hidden = true;
@@ -496,10 +577,12 @@ lines.forEach((words, index) => {
     const status = card.querySelector(".recording-status");
     status.textContent = "Ready to record";
     status.className = "recording-status";
+    setPlaybackAvailability(index, false);
   });
   list.append(card);
 });
 
+renderPlaybackList();
 loadRecordings().catch(error => {
   console.error(error);
   supportMessage.hidden = false;
