@@ -420,6 +420,13 @@ lines.forEach((words, index) => {
       });
     }
     note.append(noteSvg);
+    if (word.note === "֡") {
+      note.classList.add("font-match-note");
+      const fontNote = document.createElement("span");
+      fontNote.className = "font-match-note-source";
+      fontNote.textContent = ` ${word.note}`;
+      note.append(fontNote);
+    }
     anchor.append(note);
     name.append(anchor, document.createTextNode(word.after));
     hebrewLine.append(name);
