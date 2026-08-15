@@ -146,6 +146,13 @@ h2 { font: 600 1.55rem/1.2 "Frank Ruhl Libre", serif; }
   fill: currentColor;
 }
 .pashta-note svg { transform: rotate(180deg) scaleX(-1); }
+.stroke-note svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 54px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 
 .recording-status {
   margin: 0 0 14px;
