@@ -145,7 +145,7 @@ h2 { font: 600 1.55rem/1.2 "Frank Ruhl Libre", serif; }
   overflow: visible;
   fill: currentColor;
 }
-.pashta-note svg { transform: rotate(180deg); }
+.pashta-note svg { transform: rotate(180deg) scaleX(-1); }
 
 .recording-status {
   margin: 0 0 14px;
