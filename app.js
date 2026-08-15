@@ -17,6 +17,12 @@ const lines = [
   ]
 ];
 
+const tropePaths = {
+  "֥": "M5 3.5c0 7.2 4.2 11.5 13.5 11.5",
+  "֖": "M19 3.5c0 7.2-4.2 11.5-13.5 11.5",
+  "ֽ": "M12 3v13"
+};
+
 const DB_NAME = "my-trope-recordings";
 const STORE_NAME = "recordings";
 const list = document.querySelector("#line-list");
@@ -166,10 +172,13 @@ lines.forEach((words, index) => {
     const note = document.createElement("span");
     note.className = "trope-note";
     note.setAttribute("aria-hidden", "true");
-    const noteGlyph = document.createElement("span");
-    noteGlyph.className = "trope-note-glyph";
-    noteGlyph.textContent = `${word.letter}${word.note}`;
-    note.append(noteGlyph);
+    const noteSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    noteSvg.setAttribute("viewBox", "0 0 24 20");
+    noteSvg.setAttribute("focusable", "false");
+    const notePath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    notePath.setAttribute("d", tropePaths[word.note]);
+    noteSvg.append(notePath);
+    note.append(noteSvg);
     anchor.append(note);
     name.append(anchor, document.createTextNode(word.after));
     hebrewLine.append(name);
