@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#f5efe4">
-  <meta name="description" content="Practice and record three Hebrew trope patterns.">
+  <meta name="description" content="Practice and record Hebrew trope patterns online.">
   <title>My Trope</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=1.11.4">
+  <link rel="stylesheet" href="styles.css?v=1.12.0">
 </head>
 <body>
   <main class="app-shell">
@@ -17,7 +17,7 @@
       <div>
         <p class="eyebrow">CHANT PRACTICE</p>
         <h1>My Trope</h1>
-        <span class="app-version">Version 1.11.4</span>
+        <span class="app-version">Version 1.12.0</span>
       </div>
       <p class="header-note">Select a line, then record yourself chanting it.</p>
     </header>
@@ -34,7 +34,7 @@
       <div id="line-list" class="line-list" role="listbox" aria-label="Hebrew trope lines"></div>
       <p class="privacy-note">
         <span aria-hidden="true">●</span>
-        High-quality recordings stay private on this device and are never uploaded.
+        High-quality recordings are saved online and available from any device.
       </p>
     </section>
 
@@ -61,6 +61,7 @@
     </article>
   </template>
 
-  <script src="app.js?v=1.11.4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js?v=1.12.0"></script>
 </body>
 </html>

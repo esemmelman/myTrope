@@ -1,3 +1,9 @@
+const SUPABASE_URL = "https://fgomaujsdblpzxhnnqrg.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_JOUqLZDnfGu_yCa6k6FVDQ_AYwpr72i";
+const RECORDINGS_TABLE = "mytrope_recordings_v1";
+const RECORDINGS_BUCKET = "mytrope-recordings-v1";
+const cloud = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
 const lines = [
   [
     { before: "מֵרְ", letter: "כָ", after: "א", note: "֥" },
@@ -216,8 +222,6 @@ const tropePaths = {
   "֟": "M-54-354L-142-184M54-354L142-184"
 };
 
-const DB_NAME = "my-trope-recordings";
-const STORE_NAME = "recordings";
 const list = document.querySelector("#line-list");
 const template = document.querySelector("#line-template");
 const supportMessage = document.querySelector("#support-message");
@@ -237,46 +241,56 @@ function preferredRecorderOptions() {
   };
 }
 
-function openDatabase() {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, 1);
-    request.onupgradeneeded = () => request.result.createObjectStore(STORE_NAME);
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
-  });
+function lineLabel(index) {
+  return index < 29 ? String(index + 1) : index === 29 ? "29a" : String(index);
 }
 
 async function storeRecording(index, blob) {
-  const db = await openDatabase();
-  await new Promise((resolve, reject) => {
-    const transaction = db.transaction(STORE_NAME, "readwrite");
-    transaction.objectStore(STORE_NAME).put(blob, index);
-    transaction.oncomplete = resolve;
-    transaction.onerror = () => reject(transaction.error);
+  const extension = blob.type.includes("ogg") ? "ogg" : blob.type.includes("mp4") ? "m4a" : blob.type.includes("mpeg") ? "mp3" : "webm";
+  const objectPath = `line-${lineLabel(index)}.${extension}`;
+  const { data: existing } = await cloud.from(RECORDINGS_TABLE)
+    .select("object_path")
+    .eq("line_index", index)
+    .maybeSingle();
+  const { error: uploadError } = await cloud.storage.from(RECORDINGS_BUCKET)
+    .upload(objectPath, blob, { contentType: blob.type, upsert: true, cacheControl: "0" });
+  if (uploadError) throw uploadError;
+  const { error: rowError } = await cloud.from(RECORDINGS_TABLE).upsert({
+    line_index: index,
+    line_label: lineLabel(index),
+    object_path: objectPath,
+    mime_type: blob.type || "audio/webm",
+    byte_size: blob.size,
+    updated_at: new Date().toISOString()
   });
-  db.close();
+  if (rowError) throw rowError;
+  if (existing?.object_path && existing.object_path !== objectPath) {
+    await cloud.storage.from(RECORDINGS_BUCKET).remove([existing.object_path]);
+  }
 }
 
 async function getRecording(index) {
-  const db = await openDatabase();
-  const blob = await new Promise((resolve, reject) => {
-    const request = db.transaction(STORE_NAME).objectStore(STORE_NAME).get(index);
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
-  });
-  db.close();
-  return blob;
+  const { data, error } = await cloud.from(RECORDINGS_TABLE)
+    .select("object_path")
+    .eq("line_index", index)
+    .maybeSingle();
+  if (error) throw error;
+  if (!data) return null;
+  return cloud.storage.from(RECORDINGS_BUCKET).getPublicUrl(data.object_path).data.publicUrl;
 }
 
 async function deleteRecording(index) {
-  const db = await openDatabase();
-  await new Promise((resolve, reject) => {
-    const transaction = db.transaction(STORE_NAME, "readwrite");
-    transaction.objectStore(STORE_NAME).delete(index);
-    transaction.oncomplete = resolve;
-    transaction.onerror = () => reject(transaction.error);
-  });
-  db.close();
+  const { data, error: readError } = await cloud.from(RECORDINGS_TABLE)
+    .select("object_path")
+    .eq("line_index", index)
+    .maybeSingle();
+  if (readError) throw readError;
+  if (data?.object_path) {
+    const { error: storageError } = await cloud.storage.from(RECORDINGS_BUCKET).remove([data.object_path]);
+    if (storageError) throw storageError;
+  }
+  const { error } = await cloud.from(RECORDINGS_TABLE).delete().eq("line_index", index);
+  if (error) throw error;
 }
 
 function formatTime(seconds) {
@@ -287,18 +301,18 @@ function setSelected(card) {
   document.querySelectorAll(".line-card").forEach(item => item.setAttribute("aria-selected", String(item === card)));
 }
 
-function attachAudio(card, blob) {
+function attachAudio(card, source) {
   const audio = card.querySelector(".audio-player");
   const oldUrl = audio.dataset.url;
-  if (oldUrl) URL.revokeObjectURL(oldUrl);
-  const url = URL.createObjectURL(blob);
+  if (oldUrl?.startsWith("blob:")) URL.revokeObjectURL(oldUrl);
+  const url = source instanceof Blob ? URL.createObjectURL(source) : source;
   audio.src = url;
   audio.dataset.url = url;
   audio.hidden = false;
   card.querySelector(".play-button").disabled = false;
   card.querySelector(".delete-button").disabled = false;
   const status = card.querySelector(".recording-status");
-  status.textContent = "Recording saved on this device";
+  status.textContent = "Recording saved online";
   status.className = "recording-status saved";
 }
 
@@ -328,8 +342,15 @@ async function startRecording(card, index) {
       clearInterval(activeRecording?.interval);
       stream.getTracks().forEach(track => track.stop());
       const blob = new Blob(chunks, { type: recorder.mimeType || "audio/webm" });
-      await storeRecording(index, blob);
-      attachAudio(card, blob);
+      try {
+        status.textContent = "Saving recording online…";
+        await storeRecording(index, blob);
+        attachAudio(card, blob);
+      } catch (error) {
+        console.error(error);
+        status.textContent = "Could not save recording online";
+        status.className = "recording-status active";
+      }
       button.classList.remove("recording");
       label.textContent = "Record again";
       activeRecording = null;
@@ -353,8 +374,8 @@ async function startRecording(card, index) {
 lines.forEach((words, index) => {
   const card = template.content.firstElementChild.cloneNode(true);
   card.dataset.index = index;
-  const lineLabel = index < 29 ? index + 1 : index === 29 ? "29a" : index;
-  card.querySelector(".line-number").textContent = lineLabel;
+  const displayLineLabel = lineLabel(index);
+  card.querySelector(".line-number").textContent = displayLineLabel;
   const hebrewLine = card.querySelector(".hebrew-line");
   words.forEach(word => {
     const name = document.createElement("span");
@@ -432,7 +453,7 @@ lines.forEach((words, index) => {
     name.append(anchor, document.createTextNode(word.after));
     hebrewLine.append(name);
   });
-  card.setAttribute("aria-label", `Line ${lineLabel}: ${words.map(word => word.before + word.letter + word.after).join(" ")}`);
+  card.setAttribute("aria-label", `Line ${displayLineLabel}: ${words.map(word => word.before + word.letter + word.after).join(" ")}`);
   card.addEventListener("click", () => setSelected(card));
   card.addEventListener("keydown", event => {
     if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelected(card); }
@@ -449,7 +470,15 @@ lines.forEach((words, index) => {
   });
   card.querySelector("audio").addEventListener("ended", () => card.querySelector(".play-button").textContent = "Play");
   card.querySelector(".delete-button").addEventListener("click", async () => {
-    await deleteRecording(index);
+    try {
+      await deleteRecording(index);
+    } catch (error) {
+      console.error(error);
+      const status = card.querySelector(".recording-status");
+      status.textContent = "Could not delete online recording";
+      status.className = "recording-status active";
+      return;
+    }
     const audio = card.querySelector("audio");
     if (audio.dataset.url) URL.revokeObjectURL(audio.dataset.url);
     audio.removeAttribute("src");
@@ -463,10 +492,10 @@ lines.forEach((words, index) => {
     status.className = "recording-status";
   });
   list.append(card);
-  getRecording(index).then(blob => { if (blob) attachAudio(card, blob); }).catch(() => {});
+  getRecording(index).then(source => { if (source) attachAudio(card, source); }).catch(error => console.error(error));
 });
 
-if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder || !window.indexedDB) {
+if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
   supportMessage.hidden = false;
   supportMessage.textContent = "Recording requires a current browser with microphone access.";
   document.querySelectorAll(".record-button").forEach(button => { button.disabled = true; });

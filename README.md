@@ -1,10 +1,10 @@
 # My Trope
 
-Current version: **1.11.4**
+Current version: **1.12.0**
 
 A small browser-based Hebrew trope practice app. Each extracted pattern can be selected and recorded independently.
 
-Recordings stay private in the browser's IndexedDB storage and are not uploaded anywhere. The recorder requests unprocessed 48 kHz input and uses the best supported browser codec at 256 kbps.
+New recordings are stored online in the `bnaimitzvah` Supabase project using the app-specific `mytrope_recordings_v1` table and `mytrope-recordings-v1` bucket. Existing browser IndexedDB recordings are not migrated, read, changed, or removed. The recorder requests unprocessed 48 kHz input and uses the best supported browser codec at 256 kbps.
 
 ## Run locally
 
