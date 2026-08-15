@@ -67,7 +67,7 @@ h3 { margin: 0; font: 600 1.25rem/1.2 "Frank Ruhl Libre", serif; }
 }
 
 .practice-panel {
-  overflow: hidden;
+  overflow: clip;
   border: 1px solid var(--line);
   border-radius: 18px;
   background: var(--paper);
@@ -92,6 +92,9 @@ h3 { margin: 0; font: 600 1.25rem/1.2 "Frank Ruhl Libre", serif; }
 }
 
 .playback-browser {
+  position: sticky;
+  z-index: 5;
+  top: 0;
   padding: 20px 28px 24px;
   border-bottom: 1px solid var(--line);
   background: #f8f3ea;
@@ -118,8 +121,8 @@ h3 { margin: 0; font: 600 1.25rem/1.2 "Frank Ruhl Libre", serif; }
   grid-template-columns: 42px minmax(0, 1fr) 86px;
   align-items: center;
   width: 100%;
-  min-height: 38px;
-  padding: 5px 9px;
+  min-height: 48px;
+  padding: 7px 10px;
   border: 0;
   border-bottom: 1px solid #eee8df;
   color: var(--ink);
@@ -131,15 +134,15 @@ h3 { margin: 0; font: 600 1.25rem/1.2 "Frank Ruhl Libre", serif; }
 .recording-option:hover { background: #eaf4fb; }
 .recording-option.selected { color: white; background: #0878c9; }
 .recording-option:focus-visible { outline: 3px solid rgba(8, 120, 201, .3); outline-offset: -3px; }
-.playback-number { font-size: .78rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.playback-number { font-size: .92rem; font-weight: 700; font-variant-numeric: tabular-nums; }
 .playback-hebrew {
   overflow: hidden;
-  font: 600 1.16rem/1.2 "Frank Ruhl Libre", serif;
+  font: 600 1.55rem/1.2 "Frank Ruhl Libre", serif;
   text-align: right;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.playback-state { color: var(--muted); font-size: .7rem; text-align: right; }
+.playback-state { color: var(--muted); font-size: .78rem; text-align: right; }
 .recording-option.has-recording .playback-state { color: var(--green); font-weight: 700; }
 .recording-option.selected .playback-state { color: white; }
 .recording-option.playing .playback-state::before { content: "▶ "; }

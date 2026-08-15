@@ -336,6 +336,12 @@ async function playLineFromList(index) {
   resetPlaybackSelection();
   option.classList.add("selected");
   option.setAttribute("aria-selected", "true");
+  if (card) {
+    setSelected(card);
+    const playbackBrowser = document.querySelector(".playback-browser");
+    const targetTop = window.scrollY + card.getBoundingClientRect().top - playbackBrowser.offsetHeight;
+    window.scrollTo({ top: targetTop, behavior: "smooth" });
+  }
   if (!audio?.src) {
     playbackStatus.textContent = `Line ${lineLabel(index)} has not been recorded yet`;
     return;
