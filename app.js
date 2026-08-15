@@ -24,6 +24,20 @@ const template = document.querySelector("#line-template");
 const supportMessage = document.querySelector("#support-message");
 let activeRecording = null;
 
+function preferredRecorderOptions() {
+  const mimeTypes = [
+    "audio/webm;codecs=opus",
+    "audio/ogg;codecs=opus",
+    "audio/mp4;codecs=mp4a.40.2",
+    "audio/mp4"
+  ];
+  const mimeType = mimeTypes.find(type => MediaRecorder.isTypeSupported(type));
+  return {
+    ...(mimeType ? { mimeType } : {}),
+    audioBitsPerSecond: 256000
+  };
+}
+
 function openDatabase() {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, 1);
@@ -92,8 +106,17 @@ function attachAudio(card, blob) {
 async function startRecording(card, index) {
   if (activeRecording) return;
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const recorder = new MediaRecorder(stream);
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        sampleRate: { ideal: 48000 },
+        sampleSize: { ideal: 24 },
+        channelCount: { ideal: 1 },
+        echoCancellation: { ideal: false },
+        noiseSuppression: { ideal: false },
+        autoGainControl: { ideal: false }
+      }
+    });
+    const recorder = new MediaRecorder(stream, preferredRecorderOptions());
     const chunks = [];
     const button = card.querySelector(".record-button");
     const label = card.querySelector(".record-label");
@@ -116,7 +139,7 @@ async function startRecording(card, index) {
     recorder.start();
     button.classList.add("recording");
     label.textContent = "Stop";
-    status.textContent = "Recording…";
+      status.textContent = "Recording in high quality…";
     status.className = "recording-status active";
     timer.textContent = "0:00";
     const interval = setInterval(() => { seconds += 1; timer.textContent = formatTime(seconds); }, 1000);

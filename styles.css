@@ -169,6 +169,16 @@ h2 { font: 600 1.55rem/1.2 "Frank Ruhl Libre", serif; }
 button:disabled { cursor: not-allowed; opacity: .4; }
 .timer { margin-left: auto; color: var(--muted); font-variant-numeric: tabular-nums; font-size: .82rem; }
 .audio-player { width: 100%; height: 42px; margin-top: 14px; }
+.privacy-note {
+  margin: 0;
+  padding: 15px 28px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  background: #f8f3ea;
+  font-size: .76rem;
+  line-height: 1.45;
+}
+.privacy-note span { margin-right: 7px; color: var(--green); font-size: .65rem; }
 .support-message { padding: 14px; color: var(--accent); text-align: center; }
 
 @keyframes pulse { 50% { box-shadow: 0 0 0 6px rgba(173, 48, 42, .12); } }

@@ -1,10 +1,10 @@
 # My Trope
 
-Current version: **1.1.3**
+Current version: **1.2.0**
 
 A small browser-based Hebrew trope practice app. Each of the three extracted patterns can be selected and recorded independently.
 
-Recordings stay private in the browser's IndexedDB storage and are not uploaded anywhere.
+Recordings stay private in the browser's IndexedDB storage and are not uploaded anywhere. The recorder requests unprocessed 48 kHz input and uses the best supported browser codec at 256 kbps.
 
 ## Run locally
 
