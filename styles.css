@@ -154,6 +154,7 @@ h2 { font: 600 1.55rem/1.2 "Frank Ruhl Libre", serif; }
   stroke-linejoin: round;
 }
 .stroke-note .note-dot { fill: currentColor; stroke: none; }
+.wide-note { width: .62em; }
 
 .recording-status {
   margin: 0 0 14px;

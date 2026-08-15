@@ -155,6 +155,21 @@ const lines = [
     { before: "זַרְ", letter: "קָ", after: "א", note: "֘" },
     { before: "מֻ", letter: "נַּ", after: "ח", note: "֣" },
     { before: "סְ", letter: "גֹ", after: "ול", note: "֒" }
+  ],
+  [
+    { before: "זַרְ", letter: "קָ", after: "א", note: "֘" },
+    { before: "סְ", letter: "גֹ", after: "ול", note: "֒" }
+  ],
+  [
+    { before: "דַּרְ", letter: "גָ", after: "א", note: "֧" },
+    { before: "מֵרְכָא־כְּפוּ", letter: "לָ", after: "ה", note: "֦" }
+  ],
+  [
+    { before: "זָקֵף ", letter: "גָּ", after: "דוֹל", note: "֕" }
+  ],
+  [
+    { before: "מֻ", letter: "נַּ", after: "ח", note: "֣" },
+    { before: "", letter: "תְּ", after: "לִישָׁא גְּדוֹלָה", note: "֠" }
   ]
 ];
 
@@ -175,7 +190,10 @@ const tropePaths = {
   "֗": "M0-48L154-246L0-444L-154-246Z",
   "֜": "M-118-408C-118-248-42-102 112-62",
   "֘": "M-170-300C-110-420-32-420 18-314C68-208 120-208 170-326",
-  "֒": "M-52-64A48 48 0 1 0 44-64A48 48 0 1 0-52-64ZM-142-304A48 48 0 1 0-46-304A48 48 0 1 0-142-304ZM46-304A48 48 0 1 0 142-304A48 48 0 1 0 46-304Z"
+  "֒": "M-52-64A48 48 0 1 0 44-64A48 48 0 1 0-52-64ZM-142-304A48 48 0 1 0-46-304A48 48 0 1 0-142-304ZM46-304A48 48 0 1 0 142-304A48 48 0 1 0 46-304Z",
+  "֦": "M-156-62C-156-234-104-356-28-392M18-62C18-234 74-356 154-392",
+  "֕": "M62-52H142V-430H62ZM-136-98A42 42 0 1 0-52-98A42 42 0 1 0-136-98ZM-136-310A42 42 0 1 0-52-310A42 42 0 1 0-136-310Z",
+  "֠": "M-128-312C-156-176-78-68 34-82C142-96 154-226 68-282C2-326-62-278-40-206C-18-142 72-148 150-62"
 };
 
 const DB_NAME = "my-trope-recordings";
@@ -328,7 +346,8 @@ lines.forEach((words, index) => {
     const note = document.createElement("span");
     note.className = "trope-note";
     if (word.note === "֙" || word.note === "֨") note.classList.add("pashta-note");
-    if (word.note === "֧" || word.note === "֛" || word.note === "֞" || word.note === "֜" || word.note === "֘") note.classList.add("stroke-note");
+    if (word.note === "֧" || word.note === "֛" || word.note === "֞" || word.note === "֜" || word.note === "֘" || word.note === "֦" || word.note === "֠") note.classList.add("stroke-note");
+    if (word.note === "֦") note.classList.add("wide-note");
     note.setAttribute("aria-hidden", "true");
     const noteSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     noteSvg.setAttribute("viewBox", "-190 40 380 420");
