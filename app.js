@@ -51,6 +51,29 @@ const lines = [
     { before: "פַּשְׁטָ", letter: "א", after: "", note: "֙" },
     { before: "מֻ", letter: "נַּ", after: "ח", note: "֣" },
     { before: "קָ", letter: "טֹ", after: "ן", note: "֔" }
+  ],
+  [
+    { before: "מֻ", letter: "נַּ", after: "ח", note: "֣" },
+    { before: "מַהְ", letter: "פַּ", after: "ךְ", note: "֤" },
+    { before: "פַּשְׁטָ", letter: "א", after: "", note: "֙" },
+    { before: "מֻ", letter: "נַּ", after: "ח", note: "֣" },
+    { before: "קָ", letter: "טֹ", after: "ן", note: "֔" }
+  ],
+  [
+    { before: "מַהְ", letter: "פַּ", after: "ךְ", note: "֤" },
+    { before: "פַּשְׁטָ", letter: "א", after: "", note: "֙" },
+    { before: "מֻ", letter: "נַּ", after: "ח", note: "֣" },
+    { before: "קָ", letter: "טֹ", after: "ן", note: "֔" }
+  ],
+  [
+    { before: "מַהְ", letter: "פַּ", after: "ךְ", note: "֤" },
+    { before: "פַּשְׁטָ", letter: "א", after: "", note: "֙" },
+    { before: "קָ", letter: "טֹ", after: "ן", note: "֔" }
+  ],
+  [
+    { before: "פַּשְׁטָ", letter: "א", after: "", note: "֙" },
+    { before: "מֻ", letter: "נַּ", after: "ח", note: "֣" },
+    { before: "קָ", letter: "טֹ", after: "ן", note: "֔" }
   ]
 ];
 
