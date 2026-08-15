@@ -122,12 +122,23 @@ h2 { font: 600 1.55rem/1.2 "Frank Ruhl Libre", serif; }
   justify-content: flex-start;
   align-items: flex-start;
   gap: .3em;
-  min-height: 58px;
+  min-height: 78px;
   margin-bottom: 13px;
   font: 600 clamp(1.9rem, 6vw, 2.65rem)/1.35 "Frank Ruhl Libre", serif;
 }
 
 .hebrew-word { white-space: nowrap; }
+.trope-anchor { position: relative; }
+.trope-note {
+  position: absolute;
+  top: .88em;
+  left: 50%;
+  width: 1em;
+  color: var(--ink);
+  font: 400 1.08em/.6 "Frank Ruhl Libre", serif;
+  text-align: center;
+  transform: translateX(-50%);
+}
 
 .recording-status {
   margin: 0 0 14px;

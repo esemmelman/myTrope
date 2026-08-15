@@ -1,19 +1,19 @@
 const lines = [
   [
-    { name: "מֵרְכָ֥א" },
-    { name: "טִפְּחָ֖א" },
-    { name: "מֵרְכָ֥א" },
-    { name: "סוֹף־פָּסֽוּק" }
+    { before: "מֵרְ", letter: "כָ", after: "א", note: "֥" },
+    { before: "טִפְּ", letter: "חָ", after: "א", note: "֖" },
+    { before: "מֵרְ", letter: "כָ", after: "א", note: "֥" },
+    { before: "סוֹף־פָּ", letter: "ס", after: "וּק", note: "ֽ" }
   ],
   [
-    { name: "טִפְּחָ֖א" },
-    { name: "מֵרְכָ֥א" },
-    { name: "סוֹף־פָּסֽוּק" }
+    { before: "טִפְּ", letter: "חָ", after: "א", note: "֖" },
+    { before: "מֵרְ", letter: "כָ", after: "א", note: "֥" },
+    { before: "סוֹף־פָּ", letter: "ס", after: "וּק", note: "ֽ" }
   ],
   [
-    { name: "מֵרְכָ֥א" },
-    { name: "טִפְּחָ֖א" },
-    { name: "סוֹף־פָּסֽוּק" }
+    { before: "מֵרְ", letter: "כָ", after: "א", note: "֥" },
+    { before: "טִפְּ", letter: "חָ", after: "א", note: "֖" },
+    { before: "סוֹף־פָּ", letter: "ס", after: "וּק", note: "ֽ" }
   ]
 ];
 
@@ -159,10 +159,19 @@ lines.forEach((words, index) => {
   words.forEach(word => {
     const name = document.createElement("span");
     name.className = "hebrew-word";
-    name.textContent = word.name;
+    name.append(document.createTextNode(word.before));
+    const anchor = document.createElement("span");
+    anchor.className = "trope-anchor";
+    anchor.textContent = word.letter;
+    const note = document.createElement("span");
+    note.className = "trope-note";
+    note.textContent = `\u00a0${word.note}`;
+    note.setAttribute("aria-hidden", "true");
+    anchor.append(note);
+    name.append(anchor, document.createTextNode(word.after));
     hebrewLine.append(name);
   });
-  card.setAttribute("aria-label", `Line ${index + 1}: ${words.map(word => word.name).join(" ")}`);
+  card.setAttribute("aria-label", `Line ${index + 1}: ${words.map(word => word.before + word.letter + word.after).join(" ")}`);
   card.addEventListener("click", () => setSelected(card));
   card.addEventListener("keydown", event => {
     if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelected(card); }
