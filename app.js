@@ -92,6 +92,28 @@ const lines = [
     { before: "קַדְ", letter: "מָ", after: "א", note: "֨" },
     { before: "דַּרְ", letter: "גָ", after: "א", note: "֧" },
     { before: "תְּבִ", letter: "י", after: "ר", note: "֛" }
+  ],
+  [
+    { before: "מֻ", letter: "נַּ", after: "ח", note: "֣" },
+    { before: "דַּרְ", letter: "גָ", after: "א", note: "֧" },
+    { before: "תְּבִ", letter: "י", after: "ר", note: "֛" }
+  ],
+  [
+    { before: "דַּרְ", letter: "גָ", after: "א", note: "֧" },
+    { before: "תְּבִ", letter: "י", after: "ר", note: "֛" }
+  ],
+  [
+    { before: "תְּבִ", letter: "י", after: "ר", note: "֛" }
+  ],
+  [
+    { before: "קַדְ", letter: "מָ", after: "א", note: "֨" },
+    { before: "מֵרְ", letter: "כָ", after: "א", note: "֥" },
+    { before: "תְּבִ", letter: "י", after: "ר", note: "֛" }
+  ],
+  [
+    { before: "מֻ", letter: "נַּ", after: "ח", note: "֣" },
+    { before: "מֵרְ", letter: "כָ", after: "א", note: "֥" },
+    { before: "תְּבִ", letter: "י", after: "ר", note: "֛" }
   ]
 ];
 
