@@ -131,12 +131,21 @@ h2 { font: 600 1.55rem/1.2 "Frank Ruhl Libre", serif; }
 .trope-anchor { position: relative; }
 .trope-note {
   position: absolute;
-  top: .88em;
+  top: 1.08em;
   left: 50%;
-  width: 1em;
+  overflow: hidden;
+  width: 1.25em;
+  height: .55em;
   color: var(--ink);
-  font: 400 1.08em/.6 "Frank Ruhl Libre", serif;
+  font: 400 1.08em/1.35 "Frank Ruhl Libre", serif;
   text-align: center;
+  transform: translateX(-50%);
+}
+.trope-note-glyph {
+  position: absolute;
+  top: -.78em;
+  left: 50%;
+  white-space: nowrap;
   transform: translateX(-50%);
 }
 

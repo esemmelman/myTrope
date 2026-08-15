@@ -162,11 +162,14 @@ lines.forEach((words, index) => {
     name.append(document.createTextNode(word.before));
     const anchor = document.createElement("span");
     anchor.className = "trope-anchor";
-    anchor.textContent = word.letter;
+    anchor.textContent = `${word.letter}${word.note}`;
     const note = document.createElement("span");
     note.className = "trope-note";
-    note.textContent = `\u00a0${word.note}`;
     note.setAttribute("aria-hidden", "true");
+    const noteGlyph = document.createElement("span");
+    noteGlyph.className = "trope-note-glyph";
+    noteGlyph.textContent = `${word.letter}${word.note}`;
+    note.append(noteGlyph);
     anchor.append(note);
     name.append(anchor, document.createTextNode(word.after));
     hebrewLine.append(name);
