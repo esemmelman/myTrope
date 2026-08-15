@@ -136,6 +136,25 @@ const lines = [
   [
     { before: "קַדְ", letter: "מָ", after: "א", note: "֨" },
     { before: "וְאַזְ", letter: "לָ", after: "א", note: "֜" }
+  ],
+  [
+    { before: "גֵּ", letter: "רֵ", after: "שׁ", note: "֜" }
+  ],
+  [
+    { before: "מֻ", letter: "נַּ", after: "ח", note: "֣" },
+    { before: "זַרְ", letter: "קָ", after: "א", note: "֘" },
+    { before: "מֻ", letter: "נַּ", after: "ח", note: "֣" },
+    { before: "סְ", letter: "גֹ", after: "ול", note: "֒" }
+  ],
+  [
+    { before: "מֻ", letter: "נַּ", after: "ח", note: "֣" },
+    { before: "זַרְ", letter: "קָ", after: "א", note: "֘" },
+    { before: "סְ", letter: "גֹ", after: "ול", note: "֒" }
+  ],
+  [
+    { before: "זַרְ", letter: "קָ", after: "א", note: "֘" },
+    { before: "מֻ", letter: "נַּ", after: "ח", note: "֣" },
+    { before: "סְ", letter: "גֹ", after: "ול", note: "֒" }
   ]
 ];
 
@@ -154,7 +173,9 @@ const tropePaths = {
   "֛": "M108-64C108-238 34-352-118-352",
   "֞": "M-118-408C-118-282-80-166-28-62M24-408C24-282 64-166 116-62",
   "֗": "M0-48L154-246L0-444L-154-246Z",
-  "֜": "M-118-408C-118-248-42-102 112-62"
+  "֜": "M-118-408C-118-248-42-102 112-62",
+  "֘": "M-170-300C-110-420-32-420 18-314C68-208 120-208 170-326",
+  "֒": "M-52-64A48 48 0 1 0 44-64A48 48 0 1 0-52-64ZM-142-304A48 48 0 1 0-46-304A48 48 0 1 0-142-304ZM46-304A48 48 0 1 0 142-304A48 48 0 1 0 46-304Z"
 };
 
 const DB_NAME = "my-trope-recordings";
@@ -294,7 +315,8 @@ async function startRecording(card, index) {
 lines.forEach((words, index) => {
   const card = template.content.firstElementChild.cloneNode(true);
   card.dataset.index = index;
-  card.querySelector(".line-number").textContent = index + 1;
+  const lineLabel = index < 29 ? index + 1 : index === 29 ? "29a" : index;
+  card.querySelector(".line-number").textContent = lineLabel;
   const hebrewLine = card.querySelector(".hebrew-line");
   words.forEach(word => {
     const name = document.createElement("span");
@@ -306,7 +328,7 @@ lines.forEach((words, index) => {
     const note = document.createElement("span");
     note.className = "trope-note";
     if (word.note === "֙" || word.note === "֨") note.classList.add("pashta-note");
-    if (word.note === "֧" || word.note === "֛" || word.note === "֞" || word.note === "֜") note.classList.add("stroke-note");
+    if (word.note === "֧" || word.note === "֛" || word.note === "֞" || word.note === "֜" || word.note === "֘") note.classList.add("stroke-note");
     note.setAttribute("aria-hidden", "true");
     const noteSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     noteSvg.setAttribute("viewBox", "-190 40 380 420");
@@ -329,7 +351,7 @@ lines.forEach((words, index) => {
     name.append(anchor, document.createTextNode(word.after));
     hebrewLine.append(name);
   });
-  card.setAttribute("aria-label", `Line ${index + 1}: ${words.map(word => word.before + word.letter + word.after).join(" ")}`);
+  card.setAttribute("aria-label", `Line ${lineLabel}: ${words.map(word => word.before + word.letter + word.after).join(" ")}`);
   card.addEventListener("click", () => setSelected(card));
   card.addEventListener("keydown", event => {
     if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelected(card); }
