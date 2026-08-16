@@ -1,4 +1,4 @@
--- My Trope v1.15.0
+-- My Trope v1.15.1
 -- These names are isolated from every other app in the bnaimitzvah project.
 
 create table if not exists public.mytrope_recordings_v1 (

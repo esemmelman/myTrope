@@ -370,6 +370,7 @@ function matchScore(query, candidate) {
 
 function filterPlaybackList() {
   const query = normalizeSearch(lineSearchInput.value);
+  setRecordingListOpen(true);
   clearLineSearch.hidden = !query;
   const options = [...recordingList.querySelectorAll(".recording-option")];
   if (!query) {
@@ -402,6 +403,11 @@ function resetPlaybackSelection() {
   });
 }
 
+function setRecordingListOpen(open) {
+  recordingList.hidden = !open;
+  lineSearchInput.setAttribute("aria-expanded", String(open));
+}
+
 async function playLineFromList(index) {
   const card = list.querySelector(`[data-index="${index}"]`);
   const audio = card?.querySelector(".audio-player");
@@ -409,6 +415,7 @@ async function playLineFromList(index) {
   resetPlaybackSelection();
   option.classList.add("selected");
   option.setAttribute("aria-selected", "true");
+  setRecordingListOpen(false);
   if (card) {
     setSelected(card);
     const playbackBrowser = document.querySelector(".playback-browser");
@@ -668,6 +675,7 @@ lines.forEach((words, index) => {
 
 renderPlaybackList();
 lineSearchInput.addEventListener("input", filterPlaybackList);
+lineSearchInput.addEventListener("focus", () => setRecordingListOpen(true));
 lineSearchInput.addEventListener("keydown", event => {
   if (event.key === "Escape") {
     lineSearchInput.value = "";
@@ -682,6 +690,7 @@ clearLineSearch.addEventListener("click", () => {
   lineSearchInput.value = "";
   filterPlaybackList();
   lineSearchInput.focus();
+  setRecordingListOpen(false);
 });
 loadRecordings().catch(error => {
   console.error(error);

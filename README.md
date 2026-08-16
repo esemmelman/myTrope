@@ -1,6 +1,6 @@
 # My Trope
 
-Current version: **1.15.0**
+Current version: **1.15.1**
 
 A small browser-based Hebrew trope practice app. Each extracted pattern can be selected and recorded independently.
 

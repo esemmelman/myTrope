@@ -134,6 +134,7 @@ h3 { margin: 0; font: 600 1.25rem/1.2 "Frank Ruhl Libre", serif; }
   background: white;
   outline: none;
 }
+.recording-list[hidden] { display: none; }
 .recording-option {
   display: grid;
   grid-template-columns: 42px minmax(0, 1fr) 86px;
