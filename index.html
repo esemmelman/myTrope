@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=1.15.2">
+  <link rel="stylesheet" href="styles.css?v=1.15.3">
 </head>
 <body>
   <main class="app-shell">
@@ -17,20 +17,12 @@
       <div>
         <p class="eyebrow">CHANT PRACTICE</p>
         <h1>My Trope</h1>
-        <span class="app-version">Version 1.15.2</span>
+        <span class="app-version">Version 1.15.3</span>
       </div>
       <p class="header-note">Select a line, then record yourself chanting it.</p>
     </header>
 
-    <section class="practice-panel" aria-labelledby="patterns-heading">
-      <div class="panel-heading">
-        <div>
-          <p class="step-label">YOUR LINES</p>
-          <h2 id="patterns-heading">Trope patterns</h2>
-        </div>
-        <span class="line-count">41 lines</span>
-      </div>
-
+    <section class="practice-panel" aria-label="Trope practice">
       <section class="playback-browser" aria-labelledby="playback-heading">
         <div class="playback-heading-row">
           <div>
@@ -42,11 +34,11 @@
         <div class="line-search">
           <label for="line-search-input">Search by English trope name</label>
           <div class="line-search-controls">
-            <input id="line-search-input" type="search" inputmode="search" autocomplete="off" spellcheck="false" placeholder="Example: mercha tipcha or shalshelet" aria-controls="recording-list" aria-expanded="true">
+            <input id="line-search-input" type="search" inputmode="search" autocomplete="off" spellcheck="false" placeholder="Example: mercha tipcha or shalshelet" aria-controls="recording-list" aria-expanded="false">
             <button id="clear-line-search" type="button" hidden>Clear</button>
           </div>
         </div>
-        <div id="recording-list" class="recording-list" role="listbox" aria-label="All trope lines in number order"></div>
+        <div id="recording-list" class="recording-list" role="listbox" aria-label="Closest matching trope lines" hidden></div>
       </section>
 
       <div id="line-list" class="line-list" role="listbox" aria-label="Hebrew trope lines"></div>
@@ -80,6 +72,6 @@
   </template>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3"></script>
-  <script src="app.js?v=1.15.2"></script>
+  <script src="app.js?v=1.15.3"></script>
 </body>
 </html>

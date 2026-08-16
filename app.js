@@ -370,14 +370,15 @@ function matchScore(query, candidate) {
 
 function filterPlaybackList() {
   const query = normalizeSearch(lineSearchInput.value);
-  setRecordingListOpen(true);
   clearLineSearch.hidden = !query;
   const options = [...recordingList.querySelectorAll(".recording-option")];
   if (!query) {
     options.forEach((option, index) => { option.hidden = false; option.style.order = index; });
     playbackStatus.textContent = "Select a recorded line to play it";
+    setRecordingListOpen(false);
     return;
   }
+  setRecordingListOpen(true);
   const matches = options
     .map(option => ({ option, score: matchScore(query, option.dataset.search) }))
     .sort((a, b) => a.score - b.score || Number(a.option.dataset.lineIndex) - Number(b.option.dataset.lineIndex));
@@ -675,7 +676,9 @@ lines.forEach((words, index) => {
 
 renderPlaybackList();
 lineSearchInput.addEventListener("input", filterPlaybackList);
-lineSearchInput.addEventListener("focus", () => setRecordingListOpen(true));
+lineSearchInput.addEventListener("focus", () => {
+  if (normalizeSearch(lineSearchInput.value)) setRecordingListOpen(true);
+});
 lineSearchInput.addEventListener("keydown", event => {
   if (event.key === "Escape") {
     lineSearchInput.value = "";
