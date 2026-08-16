@@ -52,7 +52,7 @@ const lines = [
     { before: "אֶתְנַחְ", letter: "תָּ", after: "א", note: "֑" }
   ],
   [
-    { before: "מֵרְ", letter: "כָ", after: "א", note: "֥" },
+    { before: "קַדְ", letter: "מָ", after: "א", note: "֨" },
     { before: "מַהְ", letter: "פַּ", after: "ךְ", note: "֤" },
     { before: "פַּשְׁטָ", letter: "א", after: "", note: "֙" },
     { before: "מֻ", letter: "נַּ", after: "ח", note: "֣" },
